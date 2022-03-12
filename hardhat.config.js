@@ -1,3 +1,4 @@
+require('dotenv').config();
 require("@nomiclabs/hardhat-waffle");
 
 const projectID = "1033ba1a46b94c0c942bf99ffcaa7ce0";
@@ -13,11 +14,11 @@ module.exports = {
     },
     mumbai: {
       url: `https://polygon-mumbai.infura.io/v3/${projectID}`,
-      accounts: [],
+      accounts: [process.env.PRIVATE_KEY],
     },
     mainnet: {
       url: `https://mainnet.infura.io/v3/${projectID}`,
-      accounts: [],
+      accounts: [process.env.PRIVATE_KEY],
     },
   },
   solidity: {
