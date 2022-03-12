@@ -18,7 +18,15 @@ module.exports = {
     mainnet: {
       url: `https://mainnet.infura.io/v3/${projectID}`,
       accounts: [],
-    }
+    },
   },
-  solidity: "0.8.4",
+  solidity: {
+    version: "0.8.4",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
 };
