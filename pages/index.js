@@ -12,7 +12,7 @@ export default function Home() {
   const [loadingState, setLoadingState] = useState("not loaded");
 
   useEffect(() => {
-    loadNFTs;
+    loadNFTs();
   }, []);
 
   async function loadNFTs() {
@@ -47,6 +47,31 @@ export default function Home() {
     );
     setNFTs(items);
     setLoadingState("loaded");
+  }
+
+  //function to buy nfts for market
+  async function buyNFT(nft) {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(
+      nftmarketaddress,
+      KBMarket.abi,
+      signer
+    );
+
+    const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
+    const transaction = await contract.createMarketSale(
+      nftaddresss,
+      nft.tokenId,
+      {
+        value: price,
+      }
+    );
+
+    await transaction.wait();
+    loadNFTs();
   }
 
   return <div></div>;
