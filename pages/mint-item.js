@@ -6,10 +6,9 @@ import { nftaddress, nftmarketaddress } from "../config";
 import NFT from "../artifacts/contracts/NFT.sol/NFT.json";
 import KBMarket from "../artifacts/contracts/KBMarket.sol/KBMarket.json";
 import { useRouter } from "next/router";
-
 //in this component we set the ipfs up to host our nft data of file storage
 
-const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0/");
+const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 export default function MintItem() {
   const [fileUrl, setFileUrl] = useState(null);
   const [formInput, updateFormInput] = useState({
@@ -26,7 +25,7 @@ export default function MintItem() {
       const added = await client.add(file, {
         progress: (prog) => console.log(`received: ${prog}`),
       });
-      const url = `https://ipfs.infura.io:5001/api/v0/${added.path}`;
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       setFileUrl(url);
     } catch (error) {
       console.log("Error uploading file:", error);
@@ -44,7 +43,7 @@ export default function MintItem() {
     });
     try {
       const added = await client.add(data);
-      const url = `https://ipfs.infura.io:5001/api/v0/${added.path}`;
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       //run a function that creates sale and passes in the url
       createSale(url);
     } catch (error) {
@@ -60,7 +59,7 @@ export default function MintItem() {
     const signer = provider.getSigner();
 
     //we want to create the token
-    let ethers = new ethers.Contract(nftaddress, NFT.abi, signer);
+    let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
     let transaction = await contract.mintToken(url);
     let tx = await transaction.wait();
     let event = tx.events[0];
@@ -76,8 +75,8 @@ export default function MintItem() {
     transaction = await contract.makeMarketItem(nftaddress, tokenId, price, {
       value: listingPrice,
     });
-    await transaction.await();
-    router.push("/");
+    await transaction.wait();
+    router.push("./");
   }
 
   return (
@@ -88,6 +87,13 @@ export default function MintItem() {
           className="mt-8 border rounded p-4"
           onChange={(e) =>
             updateFormInput({ ...formInput, name: e.target.value })
+          }
+        />
+        <textarea
+          placeholder="Asset Description"
+          className="mt-2 border rounded p-4"
+          onChange={(e) =>
+            updateFormInput({ ...formInput, description: e.target.value })
           }
         />
         <input
