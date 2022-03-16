@@ -79,4 +79,35 @@ export default function MintItem() {
     await transaction.await();
     router.push("/");
   }
+
+  return (
+    <div className="flex justify-center">
+      <div className="w-1/2 flex flex-col pb-12">
+        <input
+          placeholder="Asset Name"
+          className="mt-8 border rounded p-4"
+          onChange={(e) =>
+            updateFormInput({ ...formInput, name: e.target.value })
+          }
+        />
+        <input
+          placeholder="Asset Price in Eth"
+          className="mt-2 border rounded p-4"
+          onChange={(e) =>
+            updateFormInput({ ...formInput, price: e.target.value })
+          }
+        />
+        <input type="file" name="Asset" className="mt-4" onChange={onChange} />{" "}
+        {fileUrl && (
+          <img className="rounded mt-4" width="300px" src={fileUrl} />
+        )}
+        <button
+          className="font-bold mt-4 bg-green-500 text-white rounded p-4 shadow-lg"
+          onClick={createMarket}
+        >
+          Mint NFT
+        </button>
+      </div>
+    </div>
+  );
 }
