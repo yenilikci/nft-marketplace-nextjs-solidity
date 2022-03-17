@@ -61,9 +61,9 @@ export default function MintItem() {
     //we want to create the token
     let contract = new ethers.Contract(nftaddress, NFT.abi, signer);
     let transaction = await contract.mintToken(url);
-    let tx = await transaction.wait();
-    let event = tx.events[0];
-    let value = event.args[2];
+    let tx = await transaction.wait()
+    let event = tx.events[0]
+    let value = event.args[2]
     let tokenId = value.toNumber();
     const price = ethers.utils.parseUnits(formInput.price, "ether");
 
